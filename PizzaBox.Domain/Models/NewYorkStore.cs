@@ -1,7 +1,7 @@
 using PizzaBox.Domain.Abstracts;
 namespace PizzaBox.Domain.Models
 {
-    public class NewYorkStore:AStore
+    public class NewYorkStore : AStore
     {
         public NewYorkStore()
         {

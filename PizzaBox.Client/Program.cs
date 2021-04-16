@@ -1,22 +1,40 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using PizzaBox.Domain.Models;
 using PizzaBox.Domain.Abstracts;
+using PizzaBox.Client.Singletons;
 
 namespace PizzaBox.Client
 {
     public class Program
     {
-      private static void Main()  
-      {
-       var stores = new List<AStore>{new ChicagoStore() , new NewYorkStore()};
-       for(var x = 0 ; x < stores.Count;x++)
-       {
-         System.Console.WriteLine($"{x} {stores[x]}");
-       }
-      string input = System.Console.ReadLine();
-      int entry = int.Parse(input);
+        private static readonly StoreSingleton storeSingleton = StoreSingleton.Instance;
+        private static void Main()
+        {
+            Run();
+            storeSingleton.WriteToFile();
+        }
 
-      System.Console.WriteLine(stores[entry]);
-      }
+        private static void Run()
+        {
+            var order = new Order();
+            Console.WriteLine("Welcome To PizzaBox");
+            PrintStoreList();
+            order.Store = SelectStore();
+        }
+
+        private static void PrintStoreList()
+        {
+            int i = 0;
+            foreach (var item in storeSingleton.Stores)
+            {
+                Console.WriteLine($"{++i} {item.ToString()}");
+            }
+        }
+        private static AStore SelectStore()
+        {
+            var input = int.Parse(Console.ReadLine());
+            return storeSingleton.Stores[input - 1];
+        }
     }
 }
