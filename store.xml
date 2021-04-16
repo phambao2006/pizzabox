@@ -8,4 +8,8 @@
     <Name>NewYorkStore</Name>
     <Id>0</Id>
   </AStore>
+    <AStore xsi:type="NewYorkStore">
+    <Name>NewYorkStore2</Name>
+    <Id>2</Id>
+  </AStore>
 </ArrayOfAStore>
