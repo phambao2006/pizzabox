@@ -6,23 +6,28 @@ namespace PizzaBox.Client.Singletons
 {
   public class PizzaSingleton
   {
+    private const string _path = @"pizzas.xml";
     public List<APizza> Pizzas { get; }
-    private static readonly PizzaSingleton _instance;
+    private static PizzaSingleton _instance;
 
     public static PizzaSingleton Instance
     {
       get
       {
-        return new PizzaSingleton();
+        if (_instance == null)
+          _instance = new PizzaSingleton();
+
+        return _instance;
       }
     }
+
     private PizzaSingleton()
     {
       Pizzas = new List<APizza>
       {
-        new VeggiePizza(),
-        new MeatPizza(),
-        new CustomPizza()
+        //new VeggiePizza(),
+        new MeatPizza()
+        //new CustomPizza()
       };
     }
   }

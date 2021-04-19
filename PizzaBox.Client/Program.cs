@@ -22,8 +22,9 @@ namespace PizzaBox.Client
       PrintStoreList();
       order.Store = SelectStore();
       PrintPizzaList();
-      order.Pizzas = new List<APizza> { };
-      order.Pizzas.Add(SelectPizza());
+      order.Pizzas = new List<APizza> { SelectPizza() };
+
+      Console.WriteLine(order.Pizzas[0].Name);
     }
 
     private static void PrintPizzaList()

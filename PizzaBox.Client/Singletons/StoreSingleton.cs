@@ -10,7 +10,7 @@ namespace PizzaBox.Client.Singletons
   public class StoreSingleton
   {
     private const string _path = @"store.xml";
-    private static readonly StoreSingleton _instance;
+    private static StoreSingleton _instance;
 
     public List<AStore> Stores { get; }
     public static StoreSingleton Instance
@@ -19,7 +19,7 @@ namespace PizzaBox.Client.Singletons
       {
         if (_instance == null)
         {
-          return new StoreSingleton();
+          _instance = new StoreSingleton();
         }
 
         return _instance;
@@ -32,7 +32,7 @@ namespace PizzaBox.Client.Singletons
       var fr = new FileRepository();
       try
       {
-        Stores = fr.ReadFromFile(_path);
+        Stores = fr.ReadFromFile<List<AStore>>(_path);
       }
       catch
       {
