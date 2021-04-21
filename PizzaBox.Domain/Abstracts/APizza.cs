@@ -1,11 +1,10 @@
-using System;
 using System.Collections.Generic;
 using System.Text;
 using PizzaBox.Domain.Models;
 
 namespace PizzaBox.Domain.Abstracts
 {
-  public abstract class APizza
+  public abstract class APizza : AModel
   {
     public int Id { get; set; }
     public string Name { get; set; }
@@ -14,7 +13,7 @@ namespace PizzaBox.Domain.Abstracts
 
     public List<Topping> Toppings { get; protected set; }
 
-    protected APizza()
+    public APizza()
     {
       Factory();
     }
