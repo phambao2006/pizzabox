@@ -9,7 +9,6 @@ namespace PizzaBox.Domain.Abstracts
   public abstract class AStore : AModel
   {
     public string Name { get; set; }
-    public int Id { get; set; }
     public List<Order> Orders { get; set; }
 
     public override string ToString()

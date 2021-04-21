@@ -17,7 +17,7 @@ namespace PizzaBox.Domain.Models
 
     protected override void AddSize()
     {
-      Size = new Size { Name = "Large", Price = 2 };
+      Size = new Size { Name = "Medium" };
     }
 
     protected override void AddTopping()

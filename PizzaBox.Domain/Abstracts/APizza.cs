@@ -6,10 +6,10 @@ namespace PizzaBox.Domain.Abstracts
 {
   public abstract class APizza : AModel
   {
-    public int Id { get; set; }
     public string Name { get; set; }
     public Crust Crust { get; set; }
     public Size Size { get; set; }
+    public long SizeEntityID { get; set; }
 
     public List<Topping> Toppings { get; protected set; }
 
