@@ -9,9 +9,8 @@ namespace PizzaBox.Domain.Abstracts
     public string Name { get; set; }
     public Crust Crust { get; set; }
     public Size Size { get; set; }
-    public long SizeEntityID { get; set; }
 
-    public List<Topping> Toppings { get; protected set; }
+    public List<Topping> Toppings { get; set; }
 
     public APizza()
     {
@@ -33,18 +32,18 @@ namespace PizzaBox.Domain.Abstracts
 
     protected abstract void AddCrust();
 
-    public override string ToString()
-    {
-      var stringBuilder = new StringBuilder();
-      var separator = ", ";
-
-      foreach (var item in Toppings)
+    /*  public override string ToString()
       {
-        stringBuilder.Append($"{item.Name}{separator}");
-      }
+        var stringBuilder = new StringBuilder();
+        var separator = ", ";
 
-      return $"{Name} - Crust:{Crust.Name} - Size:{Size.Name} - Topping:{stringBuilder.ToString().TrimEnd(separator.ToCharArray())}";
-    }
+        foreach (var item in Toppings)
+        {
+          stringBuilder.Append($"{item.Name}{separator}");
+        }
+
+        return $"{Name} - Crust:{Crust.Name} - Size:{Size.Name} - Topping:{stringBuilder.ToString().TrimEnd(separator.ToCharArray())}";
+      }*/
 
   }
 

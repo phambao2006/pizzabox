@@ -8,7 +8,6 @@ namespace PizzaBox.Client.Singletons
 {
   public class PizzaSingleton
   {
-    private const string _path = @"pizzas.xml";
     public List<APizza> Pizzas { get; }
     private readonly PizzaBoxContext _context = new PizzaBoxContext();
     private static PizzaSingleton _instance;
@@ -26,11 +25,35 @@ namespace PizzaBox.Client.Singletons
 
     private PizzaSingleton()
     {
+      if (_context.Pizzas.Count() == 0)
+      {
+        var mp = new MeatPizza();
+        mp.Name = "Meat Lover";
+        mp.Toppings = new List<Topping>();
 
-      _context.Pizzas.AddRange(new List<APizza> { new MeatPizza(), new VeggiePizza() });
+        mp.Toppings.AddRange(new List<Topping>
+          {
+              _context.Toppings.FirstOrDefault(t => t.Name == "Chicken"),
+              _context.Toppings.FirstOrDefault(t => t.Name == "Pork"),
+              _context.Toppings.FirstOrDefault(t => t.Name == "Beef")
+
+          });
+
+        var vp = new VeggiePizza();
+        vp.Name = "Veggie Pizza";
+        vp.Toppings = new List<Topping>();
+        mp.Toppings.AddRange(new List<Topping>
+          {
+             _context.Toppings.FirstOrDefault(t => t.Name == "Mushroom"),
+             _context.Toppings.FirstOrDefault(t => t.Name == "Pineapple"),
+             _context.Toppings.FirstOrDefault(t => t.Name == "Bell Pepper")
+
+          });
+
+        _context.AddRange(new List<APizza> { mp, vp });
+        _context.SaveChanges();
+      }
       Pizzas = _context.Pizzas.ToList();
-
-      _context.SaveChanges();
     }
   }
 }

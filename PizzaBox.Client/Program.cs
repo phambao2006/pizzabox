@@ -4,6 +4,7 @@ using PizzaBox.Domain.Models;
 using PizzaBox.Domain.Abstracts;
 using PizzaBox.Client.Singletons;
 using PizzaBox.Storing;
+using System.Linq;
 
 namespace PizzaBox.Client
 {
@@ -15,6 +16,7 @@ namespace PizzaBox.Client
     {
       //RunEF();
       Run();
+
     }
     private static void RunEF()
     {
@@ -32,8 +34,6 @@ namespace PizzaBox.Client
       order.Store = SelectStore();
       PrintPizzaList();
       order.Pizzas = new List<APizza> { SelectPizza() };
-
-
     }
 
     private static void PrintPizzaList()
@@ -41,7 +41,7 @@ namespace PizzaBox.Client
       var index = 0;
       foreach (var item in pizzaSingleton.Pizzas)
       {
-        Console.WriteLine($"{++index} {item}");
+        Console.WriteLine($"{++index} {item.Name}");
       }
     }
 
@@ -57,7 +57,7 @@ namespace PizzaBox.Client
       int i = 0;
       foreach (var item in storeSingleton.Stores)
       {
-        Console.WriteLine($"{++i} {item}");
+        Console.WriteLine($"{++i} {item.Name}");
       }
     }
     private static AStore SelectStore()

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PizzaBox.Storing;
 
 namespace PizzaBox.Storing.Migrations
 {
     [DbContext(typeof(PizzaBoxContext))]
-    partial class PizzaBoxContextModelSnapshot : ModelSnapshot
+    [Migration("20210422075810_add sizes-toppings-crusts-price4")]
+    partial class addsizestoppingscrustsprice4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -286,13 +288,6 @@ namespace PizzaBox.Storing.Migrations
                     b.HasBaseType("PizzaBox.Domain.Abstracts.AStore");
 
                     b.HasDiscriminator().HasValue("ChicagoStore");
-
-                    b.HasData(
-                        new
-                        {
-                            EntityID = 1L,
-                            Name = "Downtown"
-                        });
                 });
 
             modelBuilder.Entity("PizzaBox.Domain.Models.NewYorkStore", b =>
@@ -300,13 +295,6 @@ namespace PizzaBox.Storing.Migrations
                     b.HasBaseType("PizzaBox.Domain.Abstracts.AStore");
 
                     b.HasDiscriminator().HasValue("NewYorkStore");
-
-                    b.HasData(
-                        new
-                        {
-                            EntityID = 2L,
-                            Name = "Times Square"
-                        });
                 });
 
             modelBuilder.Entity("APizzaTopping", b =>

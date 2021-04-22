@@ -9,13 +9,11 @@ namespace PizzaBox.Client.Singletons
 {
   public class StoreSingleton
   {
-    private const string _path = @"store.xml";
     private static StoreSingleton _instance;
 
     private readonly PizzaBoxContext _context = new PizzaBoxContext();
 
-    public List<AStore> Stores
-    { get; }
+    public List<AStore> Stores { get; }
     public static StoreSingleton Instance
     {
       get
@@ -32,16 +30,7 @@ namespace PizzaBox.Client.Singletons
     private StoreSingleton()
     {
 
-      var fr = new FileRepository();
-      try
-      {
-        Stores = _context.Stores.ToList();
-      }
-      catch
-      {
-        Stores = new List<AStore> { new ChicagoStore(), new NewYorkStore() };
-        fr.WriteToFile(Stores, _path);
-      }
+      Stores = _context.Stores.ToList();
 
     }
 
