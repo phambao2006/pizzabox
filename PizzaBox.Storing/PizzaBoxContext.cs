@@ -10,7 +10,6 @@ namespace PizzaBox.Storing
     private readonly IConfiguration _configuration;
     public DbSet<AStore> Stores { get; set; }
     public DbSet<APizza> Pizzas { get; set; }
-
     public DbSet<Size> Sizes { get; set; }
     public DbSet<Crust> Crusts { get; set; }
     public DbSet<Topping> Toppings { get; set; }
@@ -36,8 +35,13 @@ namespace PizzaBox.Storing
       builder.Entity<NewYorkStore>().HasBaseType<AStore>();
 
       builder.Entity<APizza>().HasKey(e => e.EntityID);
-      //builder.Entity<APizza>().HasOne<Size>();
-      //builder.Entity<Size>().HasMany<APizza>();
+
+      builder.Entity<Size>().HasKey(e => e.EntityID);
+
+
+      builder.Entity<Crust>().HasKey(e => e.EntityID);
+
+
 
       builder.Entity<CustomPizza>().HasBaseType<APizza>();
       builder.Entity<MeatPizza>().HasBaseType<APizza>();
@@ -46,9 +50,11 @@ namespace PizzaBox.Storing
       builder.Entity<Customer>().HasKey(e => e.EntityID);
 
       builder.Entity<Topping>().HasKey(e => e.EntityID);
-      builder.Entity<Crust>().HasKey(e => e.EntityID);
+
       builder.Entity<Order>().HasKey(e => e.EntityID);
-      builder.Entity<Size>().HasKey(e => e.EntityID);
+      builder.Entity<Order>().HasOne<AStore>().WithMany();
+
+
 
       OnDataSeeding(builder);
     }
@@ -84,7 +90,6 @@ namespace PizzaBox.Storing
       {
         new NewYorkStore{EntityID = 2,Name = "Times Square"}
       });
-
 
 
     }

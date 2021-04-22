@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PizzaBox.Storing;
 
 namespace PizzaBox.Storing.Migrations
 {
     [DbContext(typeof(PizzaBoxContext))]
-    partial class PizzaBoxContextModelSnapshot : ModelSnapshot
+    [Migration("20210422162922_add sizes-toppings-crusts-price5")]
+    partial class addsizestoppingscrustsprice5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,6 +31,9 @@ namespace PizzaBox.Storing.Migrations
                     b.Property<long?>("CrustEntityID")
                         .HasColumnType("bigint");
 
+                    b.Property<long?>("CrustEntityID1")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Discriminator")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -42,13 +47,20 @@ namespace PizzaBox.Storing.Migrations
                     b.Property<long?>("SizeEntityID")
                         .HasColumnType("bigint");
 
+                    b.Property<long?>("SizeEntityID1")
+                        .HasColumnType("bigint");
+
                     b.HasKey("EntityID");
 
                     b.HasIndex("CrustEntityID");
 
+                    b.HasIndex("CrustEntityID1");
+
                     b.HasIndex("OrderEntityID");
 
                     b.HasIndex("SizeEntityID");
+
+                    b.HasIndex("SizeEntityID1");
 
                     b.ToTable("Pizzas");
 
@@ -310,6 +322,10 @@ namespace PizzaBox.Storing.Migrations
                         .WithMany()
                         .HasForeignKey("CrustEntityID");
 
+                    b.HasOne("PizzaBox.Domain.Models.Crust", null)
+                        .WithMany()
+                        .HasForeignKey("CrustEntityID1");
+
                     b.HasOne("PizzaBox.Domain.Models.Order", null)
                         .WithMany("Pizzas")
                         .HasForeignKey("OrderEntityID");
@@ -317,6 +333,10 @@ namespace PizzaBox.Storing.Migrations
                     b.HasOne("PizzaBox.Domain.Models.Size", "Size")
                         .WithMany()
                         .HasForeignKey("SizeEntityID");
+
+                    b.HasOne("PizzaBox.Domain.Models.Size", null)
+                        .WithMany()
+                        .HasForeignKey("SizeEntityID1");
 
                     b.Navigation("Crust");
 

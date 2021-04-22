@@ -12,6 +12,8 @@ namespace PizzaBox.Client
   {
     private static readonly StoreSingleton storeSingleton = StoreSingleton.Instance;
     private static readonly PizzaSingleton pizzaSingleton = PizzaSingleton.Instance;
+    private static readonly SizeSingleton sizeSingleton = SizeSingleton.Instance;
+    private static readonly PizzaBoxContext _context = new PizzaBoxContext();
     private static void Main()
     {
       //RunEF();
@@ -20,10 +22,9 @@ namespace PizzaBox.Client
     }
     private static void RunEF()
     {
-      var context = new PizzaBoxContext();
-      var stores = context.Stores;
+      var stores = _context.Stores;
       stores.Add(new ChicagoStore { Name = "12th Street" });
-      context.SaveChanges();
+      _context.SaveChanges();
     }
 
     private static void Run()
@@ -33,7 +34,7 @@ namespace PizzaBox.Client
       PrintStoreList();
       order.Store = SelectStore();
       PrintPizzaList();
-      order.Pizzas = new List<APizza> { SelectPizza() };
+      order.Pizzas.Add(SelectPizza());
     }
 
     private static void PrintPizzaList()
@@ -49,7 +50,21 @@ namespace PizzaBox.Client
     {
       Console.WriteLine("Select Your Pizza");
       int input = int.Parse(Console.ReadLine());
-      return pizzaSingleton.Pizzas[input - 1];
+      var pizza = pizzaSingleton.Pizzas[input - 1];
+      //pizza.Size = SelectSize();
+      //   pizza.Toppings.Add(SelectTopping());
+      return pizza;
+    }
+
+    /* private static Topping SelectTopping()
+     {
+       var topping = new List<Topping>();
+
+     }
+ */
+    private static Size SelectSize()
+    {
+      throw new NotImplementedException();
     }
 
     private static void PrintStoreList()
