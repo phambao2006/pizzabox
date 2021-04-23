@@ -13,6 +13,8 @@ namespace PizzaBox.Client
     private static readonly StoreSingleton storeSingleton = StoreSingleton.Instance;
     private static readonly PizzaSingleton pizzaSingleton = PizzaSingleton.Instance;
     private static readonly SizeSingleton sizeSingleton = SizeSingleton.Instance;
+    private static readonly ToppingSingleton toppingSingleton = ToppingSingleton.Instance;
+    private static readonly CrustSingleton crustSingleton = CrustSingleton.Instance;
     private static readonly PizzaBoxContext _context = new PizzaBoxContext();
     private static void Main()
     {
@@ -31,10 +33,8 @@ namespace PizzaBox.Client
     {
       var order = new Order();
       Console.WriteLine("Welcome To PizzaBox");
-      PrintStoreList();
       order.Store = SelectStore();
-      PrintPizzaList();
-      order.Pizzas.Add(SelectPizza());
+      order.Pizzas = SelectPizza();
     }
 
     private static void PrintPizzaList()
@@ -46,27 +46,59 @@ namespace PizzaBox.Client
       }
     }
 
-    private static APizza SelectPizza()
+    private static List<APizza> SelectPizza()
     {
-      Console.WriteLine("Select Your Pizza");
-      int input = int.Parse(Console.ReadLine());
-      var pizza = pizzaSingleton.Pizzas[input - 1];
-      //pizza.Size = SelectSize();
+      List<APizza> pizzas = new List<APizza>();
+      do
+      {
+        PrintPizzaList();
+        Console.WriteLine("Select Your Pizza");
+        int input = int.Parse(Console.ReadLine());
+        var pizza = pizzaSingleton.Pizzas[input - 1];
+        pizza.Size = SelectSize();
+        pizza.Crust = SelectCrust();
+        pizzas.Add(pizza);
+        Console.Write("Do you want to order more pizza ? [Y/N] ");
+      } while (Choice().Equals('Y'));
       //   pizza.Toppings.Add(SelectTopping());
-      return pizza;
+
+      /* foreach (var item in pizzas)
+       {
+         Console.WriteLine($" {item.Name}");
+       }*/
+      return pizzas;
     }
 
-    /* private static Topping SelectTopping()
-     {
-       var topping = new List<Topping>();
+    private static Crust SelectCrust()
+    {
+      Console.WriteLine("Select Your Pizza Crust");
+      PrintCrustList();
+      var input = int.Parse(Console.ReadLine());
+      return crustSingleton.Crusts[input - 1];
+    }
 
-     }
- */
     private static Size SelectSize()
     {
-      throw new NotImplementedException();
-    }
 
+      Console.WriteLine("Select Your Pizza Size");
+      PrintSizeList();
+      var input = int.Parse(Console.ReadLine());
+      return sizeSingleton.Sizes[input - 1];
+    }
+    private static void PrintSizeList()
+    {
+      int i = 0;
+      foreach (var item in sizeSingleton.Sizes)
+      {
+        Console.WriteLine($"{++i} {item.Name}");
+      }
+    }
+    private static char Choice()
+    {
+      char choice;
+      choice = char.Parse(Console.ReadLine());
+      return Char.ToUpper(choice);
+    }
     private static void PrintStoreList()
     {
       int i = 0;
@@ -77,9 +109,24 @@ namespace PizzaBox.Client
     }
     private static AStore SelectStore()
     {
+      PrintStoreList();
       Console.WriteLine("Select Your Store");
       var input = int.Parse(Console.ReadLine());
       return storeSingleton.Stores[input - 1];
     }
+
+    private static void PrintCrustList()
+    {
+      int i = 0;
+      foreach (var item in crustSingleton.Crusts)
+      {
+        Console.WriteLine($"{++i} {item.Name}");
+      }
+    }
+    /* private static List<Topping> SelectTopping()
+     {
+
+       return
+     }*/
   }
 }

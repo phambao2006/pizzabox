@@ -36,18 +36,18 @@ namespace PizzaBox.Domain.Abstracts
 
     protected abstract void AddCrust();
 
-    /*  public override string ToString()
+    public override string ToString()
+    {
+      var stringBuilder = new StringBuilder();
+      var separator = ", ";
+
+      foreach (var item in Toppings)
       {
-        var stringBuilder = new StringBuilder();
-        var separator = ", ";
+        stringBuilder.Append($"{item.Name}{separator}");
+      }
 
-        foreach (var item in Toppings)
-        {
-          stringBuilder.Append($"{item.Name}{separator}");
-        }
-
-        return $"{Name} - Crust:{Crust.Name} - Size:{Size.Name} - Topping:{stringBuilder.ToString().TrimEnd(separator.ToCharArray())}";
-      }*/
+      return $"{Name} - Crust:{Crust.Name} - Size:{Size.Name} - Topping:{stringBuilder.ToString().TrimEnd(separator.ToCharArray())}";
+    }
 
   }
 
