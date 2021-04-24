@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using PizzaBox.Domain.Models;
 using PizzaBox.Domain.Abstracts;
 using PizzaBox.Client.Singletons;
-using PizzaBox.Storing;
+using PizzaBox.Domain;
 using System.Linq;
 
 namespace PizzaBox.Client
@@ -11,7 +11,7 @@ namespace PizzaBox.Client
   public class Program
   {
     private static readonly StoreSingleton storeSingleton = StoreSingleton.Instance;
-    private static readonly PizzaSingleton pizzaSingleton = PizzaSingleton.Instance;
+    private static readonly PizzaSingleton pizzaSingleton = new PizzaSingleton();
     private static readonly SizeSingleton sizeSingleton = SizeSingleton.Instance;
     private static readonly ToppingSingleton toppingSingleton = ToppingSingleton.Instance;
     private static readonly CrustSingleton crustSingleton = CrustSingleton.Instance;
@@ -33,7 +33,7 @@ namespace PizzaBox.Client
     {
       var order = new Order();
       Console.WriteLine("Welcome To PizzaBox");
-      order.Store = SelectStore();
+      // order.Store = SelectStore();
       order.Pizzas = SelectPizza();
     }
 
@@ -57,15 +57,18 @@ namespace PizzaBox.Client
         var pizza = pizzaSingleton.Pizzas[input - 1];
         pizza.Size = SelectSize();
         pizza.Crust = SelectCrust();
+        if (pizza.Name == "Custom Pizza")
+        {
+          pizza.Toppings = SelectTopping();
+        }
         pizzas.Add(pizza);
-        Console.Write("Do you want to order more pizza ? [Y/N] ");
+        Console.WriteLine("Pizza in Cart");
+        foreach (var item in pizzas)
+        {
+          Console.WriteLine(item.ToString());
+        }
+        Console.WriteLine("Do you want to order more pizza ? [Y/N] ");
       } while (Choice().Equals('Y'));
-      //   pizza.Toppings.Add(SelectTopping());
-
-      /* foreach (var item in pizzas)
-       {
-         Console.WriteLine($" {item.Name}");
-       }*/
       return pizzas;
     }
 
@@ -123,10 +126,38 @@ namespace PizzaBox.Client
         Console.WriteLine($"{++i} {item.Name}");
       }
     }
-    /* private static List<Topping> SelectTopping()
-     {
+    private static void PrintToppingList()
+    {
+      int i = 0;
+      foreach (var item in toppingSingleton.Toppings)
+      {
+        Console.WriteLine($"{++i} {item.Name}");
+      }
+    }
+    private static List<Topping> SelectTopping()
+    {
+      var toppings = new List<Topping>();
+      while (toppings.Count < 3)
+      {
+        Console.WriteLine("Select Your Topping (up to 3)");
 
-       return
-     }*/
+        PrintToppingList();
+
+        int input = int.Parse(Console.ReadLine());
+
+        toppings.Add(toppingSingleton.Toppings[input - 1]);
+
+        if (toppings.Count < 3)
+        {
+          Console.WriteLine("Would You Like More Topping? [Y/N]");
+
+          if (Choice() == 'N')
+          {
+            break;
+          }
+        }
+      }
+      return toppings;
+    }
   }
 }

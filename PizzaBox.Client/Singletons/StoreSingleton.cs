@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using PizzaBox.Domain.Abstracts;
 using PizzaBox.Domain.Models;
 using PizzaBox.Storing.Repositories;
-using PizzaBox.Storing;
+using PizzaBox.Domain;
 using System.Linq;
 
 namespace PizzaBox.Client.Singletons

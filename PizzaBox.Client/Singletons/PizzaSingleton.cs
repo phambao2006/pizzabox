@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using PizzaBox.Domain.Abstracts;
 using PizzaBox.Domain.Models;
-using PizzaBox.Storing;
+using PizzaBox.Domain;
 using PizzaBox.Storing.Repositories;
 
 namespace PizzaBox.Client.Singletons
@@ -13,20 +13,17 @@ namespace PizzaBox.Client.Singletons
     private readonly FileRepository _fr = new FileRepository();
     public List<APizza> Pizzas { get; }
     private readonly PizzaBoxContext _context = new PizzaBoxContext();
-    private static PizzaSingleton _instance;
+    //private static PizzaSingleton _instance;
 
-    public static PizzaSingleton Instance
-    {
-      get
-      {
-        if (_instance == null)
-          _instance = new PizzaSingleton();
+    /* public PizzaSingleton Instance
+     {
+       get
+       {
+         return new PizzaSingleton();
+       }
+     }*/
 
-        return _instance;
-      }
-    }
-
-    private PizzaSingleton()
+    public PizzaSingleton()
     {
       try
       {
