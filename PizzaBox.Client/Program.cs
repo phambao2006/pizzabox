@@ -105,7 +105,9 @@ namespace PizzaBox.Client
       order.Store = SelectStore();
       order.Pizzas = SelectPizza();
       var total = order.Total();
-      Console.WriteLine($"Your total is: ${total} + Tax(8.25%) = ${(total * (decimal)1.0825).ToString("#.##")}\n");
+      Console.WriteLine($"\nYour total is: ${total} + Tax(8.25%) = ${(total * (decimal)1.0825).ToString("#.##")}\n");
+      Console.WriteLine("Press Enter to Confirm Orders");
+      Console.ReadLine();
       contextSingleton.context.Orders.Add(order);
       contextSingleton.context.SaveChanges();
       Console.WriteLine("Order will ready in 15 mins Thank You! \n");
