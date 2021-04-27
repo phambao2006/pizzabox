@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using PizzaBox.Client.Singletons;
 using PizzaBox.Domain.Abstracts;
 using PizzaBox.Domain.Models;
 using Xunit;
@@ -69,16 +70,37 @@ namespace PizzaBox.Testing.Tests
     [MemberData(nameof(Pizzavalues))]
     public void Test_Pizza(APizza pizza)
     {
-      Assert.NotNull(pizza.Name);
       Assert.NotNull(pizza.Toppings);
     }
     [Theory]
     [MemberData(nameof(Custommervalues))]
     public void Test_CustomPizza(Customer customer)
     {
-      Assert.NotNull(customer.Name);
       Assert.Equal(customer.Name, customer.ToString());
     }
+    [Fact]
+    public void Test_StoreSingleton()
+    {
+      var sut1 = StoreSingleton.Instance;
+      var sut2 = StoreSingleton.Instance;
+
+      sut1.Stores.Add(new ChicagoStore());
+
+      Assert.Equal(sut1, sut2);
+
+    }
+    [Fact]
+    public void Test_PizzaSingleton()
+    {
+      var sut1 = PizzaSingleton.Instance;
+      var sut2 = PizzaSingleton.Instance;
+
+      sut1.Pizzas.Add(new MeatPizza());
+
+      Assert.Equal(sut1, sut2);
+
+    }
+
 
 
     /// <summary>
