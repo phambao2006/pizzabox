@@ -20,10 +20,16 @@ namespace PizzaBox.Client
     private static readonly ContextSingleton contextSingleton = ContextSingleton.Instance;
     private static void Main()
     {
+      Start();
+    }
+
+
+    private static void Start()
+    {
       int choice;
       do
       {
-        Console.WriteLine("Who Are You?");
+        Console.WriteLine("\nWho Are You?");
         Console.WriteLine("1. Customer");
         Console.WriteLine("2. Store Employee");
         Console.WriteLine("3. Exit");
@@ -44,46 +50,66 @@ namespace PizzaBox.Client
       } while (choice < 3);
 
     }
-
     private static void StoreRun()
     {
-      Console.WriteLine("Select Store You Want To View Orders of: ");
+      Console.WriteLine("Select Store You Want To View Orders: ");
       PrintStoreList();
       int storeid = int.Parse(Console.ReadLine());
       var orders = contextSingleton.context.Orders
-      .Where(s => s.StoreEntityID == (storeid))
-      .Include(o => o.Store).Include(o => o.Customer).Include(o => o.Pizzas).ThenInclude(p => p.Toppings).ToList();
+      .Where(o => o.StoreEntityID == storeid)
+      .Include(o => o.Store).Include(o => o.Customer)
+      .Include(o => o.Pizzas)
+      .ThenInclude(p => p.Toppings).ToList();
+      Console.WriteLine();
       foreach (var order in orders)
       {
-        Console.WriteLine(order.ToString());
+        Console.WriteLine($"{order.ToString()} ${(order.Total() * (decimal)1.0825).ToString("#.##")}");
       }
 
     }
     private static void CustomerRun()
     {
       var order = new Order();
-      Console.WriteLine("Welcome To PizzaBox");
-      Console.WriteLine("Please Enter Your Name: ");
+      Console.WriteLine("\nWelcome To PizzaBox");
+      Console.WriteLine("\nPlease Enter Your Name: ");
       var tempname = Console.ReadLine();
       var tempname2 = contextSingleton.context.Customers.FirstOrDefault(c => c.Name == tempname);
       if (tempname2 != null)
       {
+        Console.WriteLine("\nWelcome Back!! " + tempname);
         order.Customer = tempname2;
+        Console.WriteLine("\nWould You like to view your order history? [Y/N]");
+        if (Choice() == 'Y')
+        {
+          var customerorder = contextSingleton.context.Customers
+          .Where(c => c.Name == tempname)
+          .Include(c => c.Orders)
+          .ThenInclude(o => o.Pizzas)
+          .ThenInclude(p => p.Toppings).ToList();
+
+          foreach (var co in customerorder)
+          {
+            foreach (var item in co.Orders)
+            {
+              Console.WriteLine($"{item.ToString()} ${(item.Total() * (decimal)1.0825).ToString("#.##")}");
+            }
+          }
+        }
       }
       else
       {
+        Console.WriteLine("\nNew Customer!!" + tempname);
         order.Customer = new Customer { Name = tempname };
       }
 
       order.Store = SelectStore();
       order.Pizzas = SelectPizza();
       var total = order.Total();
-      Console.WriteLine($"Your total is: ${total} + Tax = {(total * (decimal)1.0825).ToString("#.##")}");
+      Console.WriteLine($"Your total is: ${total} + Tax(8.25%) = ${(total * (decimal)1.0825).ToString("#.##")}\n");
       contextSingleton.context.Orders.Add(order);
       contextSingleton.context.SaveChanges();
-      Console.WriteLine("Order will ready in 15 mins Thank You !");
+      Console.WriteLine("Order will ready in 15 mins Thank You! \n");
     }
-
     private static void PrintPizzaList()
     {
       var index = 0;
@@ -131,7 +157,7 @@ namespace PizzaBox.Client
         {
           Console.WriteLine(item.ToString());
         }
-        Console.WriteLine("Do you want to order more pizza ? [Y/N] ");
+        Console.WriteLine("\nDo you want to order more pizza ? [Y/N] ");
       } while (Choice().Equals('Y'));
       return pizzas;
     }
@@ -176,7 +202,7 @@ namespace PizzaBox.Client
     }
     private static AStore SelectStore()
     {
-      Console.WriteLine("Select Your Store");
+      Console.WriteLine("\nSelect Your Store");
       PrintStoreList();
       var input = int.Parse(Console.ReadLine());
       return storeSingleton.Stores[input - 1];
