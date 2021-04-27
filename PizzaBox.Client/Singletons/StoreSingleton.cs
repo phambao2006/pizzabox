@@ -11,7 +11,7 @@ namespace PizzaBox.Client.Singletons
   {
     private static StoreSingleton _instance;
 
-    private readonly PizzaBoxContext _context = new PizzaBoxContext();
+    private static readonly ContextSingleton contextSingleton = ContextSingleton.Instance;
 
     public List<AStore> Stores { get; }
     public static StoreSingleton Instance
@@ -30,7 +30,7 @@ namespace PizzaBox.Client.Singletons
     private StoreSingleton()
     {
 
-      Stores = _context.Stores.ToList();
+      Stores = contextSingleton.context.Stores.ToList();
 
     }
 

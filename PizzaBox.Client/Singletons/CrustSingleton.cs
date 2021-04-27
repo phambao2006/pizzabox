@@ -11,7 +11,7 @@ namespace PizzaBox.Client.Singletons
   {
     private static CrustSingleton _instance;
 
-    private readonly PizzaBoxContext _context = new PizzaBoxContext();
+    private static readonly ContextSingleton contextSingleton = ContextSingleton.Instance;
 
     public List<Crust> Crusts { get; }
     public static CrustSingleton Instance
@@ -30,7 +30,7 @@ namespace PizzaBox.Client.Singletons
     private CrustSingleton()
     {
 
-      Crusts = _context.Crusts.ToList();
+      Crusts = contextSingleton.context.Crusts.ToList();
 
     }
 

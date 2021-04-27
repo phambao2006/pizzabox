@@ -11,7 +11,7 @@ namespace PizzaBox.Client.Singletons
   {
     private static SizeSingleton _instance;
 
-    private readonly PizzaBoxContext _context = new PizzaBoxContext();
+    private static readonly ContextSingleton contextSingleton = ContextSingleton.Instance;
 
     public List<Size> Sizes { get; }
     public static SizeSingleton Instance
@@ -30,7 +30,7 @@ namespace PizzaBox.Client.Singletons
     private SizeSingleton()
     {
 
-      Sizes = _context.Sizes.ToList();
+      Sizes = contextSingleton.context.Sizes.ToList();
 
     }
 

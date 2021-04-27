@@ -13,8 +13,10 @@ namespace PizzaBox.Domain.Abstracts
     public string Name { get; set; }
     public Crust Crust { get; set; }
     public Size Size { get; set; }
-
     public List<Topping> Toppings { get; set; }
+    public long OrderEntityId { get; set; }
+    public long SizeEntityId { get; set; }
+    public long CrustEntityId { get; set; }
 
     public APizza()
     {
@@ -46,7 +48,19 @@ namespace PizzaBox.Domain.Abstracts
         stringBuilder.Append($"{item.Name}{separator}");
       }
 
-      return $"{Name} - Crust:{Crust.Name} - Size:{Size.Name} - Topping:{stringBuilder.ToString().TrimEnd(separator.ToCharArray())}";
+      return $"{Name}:{Size.Name}-{Crust.Name}-{stringBuilder.ToString().TrimEnd(separator.ToCharArray())}";
+    }
+    public decimal PizzaPrice()
+    {
+      decimal pizzaprice = 4;
+      foreach (var topping in Toppings)
+      {
+        pizzaprice = pizzaprice + topping.Price;
+      }
+
+      pizzaprice = pizzaprice + Crust.Price + Size.Price;
+
+      return pizzaprice;
     }
 
   }

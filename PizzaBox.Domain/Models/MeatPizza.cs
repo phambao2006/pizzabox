@@ -7,7 +7,7 @@ namespace PizzaBox.Domain.Models
 {
   public class MeatPizza : APizza
   {
-    PizzaBoxContext _context = new PizzaBoxContext();
+    private static readonly ContextSingleton contextSingleton = ContextSingleton.Instance;
     protected override void AddCrust()
     {
     }
@@ -21,14 +21,15 @@ namespace PizzaBox.Domain.Models
       Toppings = new List<Topping>();
       Toppings.AddRange(new List<Topping>
           {
-             _context.Toppings.FirstOrDefault(t => t.Name == "Mushroom"),
-             _context.Toppings.FirstOrDefault(t => t.Name == "Pineapple"),
-             _context.Toppings.FirstOrDefault(t => t.Name == "Bell Pepper")
+            new Topping {Name = "Chicken", Price = 2},
+            new Topping {Name = "Beef", Price = 2},
+            new Topping {Name = "Pork", Price = 2}
           });
     }
 
     protected override void AddName()
     {
+      Name = "Meat Lover";
     }
   }
 }

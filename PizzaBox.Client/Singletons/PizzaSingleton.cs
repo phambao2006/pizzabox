@@ -12,31 +12,25 @@ namespace PizzaBox.Client.Singletons
     private const string _path = @"pizza.xml";
     private readonly FileRepository _fr = new FileRepository();
     public List<APizza> Pizzas { get; }
-    private readonly PizzaBoxContext _context = new PizzaBoxContext();
-    //private static PizzaSingleton _instance;
+    private static readonly ContextSingleton contextSingleton = ContextSingleton.Instance;
+    private static PizzaSingleton _instance;
 
-    /* public PizzaSingleton Instance
-     {
-       get
-       {
-         return new PizzaSingleton();
-       }
-     }*/
-
-    public PizzaSingleton()
+    public static PizzaSingleton Instance
     {
-      try
+      get
       {
-        Pizzas = _fr.ReadFromFile<List<APizza>>(_path);
+        if (_instance == null)
+          _instance = new PizzaSingleton();
+        return _instance;
       }
-      catch
-      {
+    }
 
-        Pizzas = new List<APizza>();
-        Pizzas.AddRange(new List<APizza> { AddMeatPizza(), AddVeggiePizza(), new CustomPizza() });
+    private PizzaSingleton()
+    {
 
-        _fr.WriteToFile(Pizzas, _path);
-      }
+      Pizzas = new List<APizza>();
+      Pizzas.AddRange(new List<APizza> { AddMeatPizza(), AddVeggiePizza(), new CustomPizza() });
+
     }
 
     private APizza AddMeatPizza()
@@ -47,9 +41,9 @@ namespace PizzaBox.Client.Singletons
 
       mp.Toppings.AddRange(new List<Topping>
           {
-              _context.Toppings.FirstOrDefault(t => t.Name == "Chicken"),
-              _context.Toppings.FirstOrDefault(t => t.Name == "Pork"),
-              _context.Toppings.FirstOrDefault(t => t.Name == "Beef")
+              contextSingleton.context.Toppings.FirstOrDefault(t => t.Name == "Chicken"),
+              contextSingleton.context.Toppings.FirstOrDefault(t => t.Name == "Pork"),
+              contextSingleton.context.Toppings.FirstOrDefault(t => t.Name == "Beef")
           });
 
       return mp;
@@ -62,9 +56,9 @@ namespace PizzaBox.Client.Singletons
       vp.Toppings = new List<Topping>();
       vp.Toppings.AddRange(new List<Topping>
           {
-             _context.Toppings.FirstOrDefault(t => t.Name == "Mushroom"),
-             _context.Toppings.FirstOrDefault(t => t.Name == "Pineapple"),
-             _context.Toppings.FirstOrDefault(t => t.Name == "Bell Pepper")
+             contextSingleton.context.Toppings.FirstOrDefault(t => t.Name == "Mushroom"),
+             contextSingleton.context.Toppings.FirstOrDefault(t => t.Name == "Pineapple"),
+             contextSingleton.context.Toppings.FirstOrDefault(t => t.Name == "Bell Pepper")
           });
 
       return vp;
@@ -72,7 +66,7 @@ namespace PizzaBox.Client.Singletons
 
 
 
-    /*if (_context.Pizzas.Count() == 0)
+    /*if (contextSingleton.context.Pizzas.Count() == 0)
     {
       var mp = new MeatPizza();
       mp.Name = "Meat Lover";
@@ -80,9 +74,9 @@ namespace PizzaBox.Client.Singletons
 
       mp.Toppings.AddRange(new List<Topping>
         {
-            _context.Toppings.FirstOrDefault(t => t.Name == "Chicken"),
-            _context.Toppings.FirstOrDefault(t => t.Name == "Pork"),
-            _context.Toppings.FirstOrDefault(t => t.Name == "Beef")
+            contextSingleton.context.Toppings.FirstOrDefault(t => t.Name == "Chicken"),
+            contextSingleton.context.Toppings.FirstOrDefault(t => t.Name == "Pork"),
+            contextSingleton.context.Toppings.FirstOrDefault(t => t.Name == "Beef")
 
         });
 
@@ -91,16 +85,16 @@ namespace PizzaBox.Client.Singletons
       vp.Toppings = new List<Topping>();
       mp.Toppings.AddRange(new List<Topping>
         {
-           _context.Toppings.FirstOrDefault(t => t.Name == "Mushroom"),
-           _context.Toppings.FirstOrDefault(t => t.Name == "Pineapple"),
-           _context.Toppings.FirstOrDefault(t => t.Name == "Bell Pepper")
+           contextSingleton.context.Toppings.FirstOrDefault(t => t.Name == "Mushroom"),
+           contextSingleton.context.Toppings.FirstOrDefault(t => t.Name == "Pineapple"),
+           contextSingleton.context.Toppings.FirstOrDefault(t => t.Name == "Bell Pepper")
 
         });
 
-      _context.AddRange(new List<APizza> { mp, vp });
-      _context.SaveChanges();
+      contextSingleton.context.AddRange(new List<APizza> { mp, vp });
+      contextSingleton.context.SaveChanges();
     }
-    Pizzas = _context.Pizzas.ToList();*/ //if there is a pizza menu in database
+    Pizzas = contextSingleton.context.Pizzas.ToList();*/ //if there is a pizza menu in database
 
   }
 }

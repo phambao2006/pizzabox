@@ -5,36 +5,83 @@ using PizzaBox.Domain.Abstracts;
 using PizzaBox.Client.Singletons;
 using PizzaBox.Domain;
 using System.Linq;
+using System.Collections;
+using Microsoft.EntityFrameworkCore;
 
 namespace PizzaBox.Client
 {
   public class Program
   {
     private static readonly StoreSingleton storeSingleton = StoreSingleton.Instance;
-    private static readonly PizzaSingleton pizzaSingleton = new PizzaSingleton();
+    private static readonly PizzaSingleton pizzaSingleton = PizzaSingleton.Instance;
     private static readonly SizeSingleton sizeSingleton = SizeSingleton.Instance;
     private static readonly ToppingSingleton toppingSingleton = ToppingSingleton.Instance;
     private static readonly CrustSingleton crustSingleton = CrustSingleton.Instance;
-    private static readonly PizzaBoxContext _context = new PizzaBoxContext();
+    private static readonly ContextSingleton contextSingleton = ContextSingleton.Instance;
     private static void Main()
     {
-      //RunEF();
-      Run();
+      int choice;
+      do
+      {
+        Console.WriteLine("Who Are You?");
+        Console.WriteLine("1. Customer");
+        Console.WriteLine("2. Store Employee");
+        Console.WriteLine("3. Exit");
+
+        choice = int.Parse(Console.ReadLine());
+        if (choice == 1)
+        {
+          CustomerRun();
+        }
+        else if (choice == 2)
+        {
+          StoreRun();
+        }
+        else
+        {
+          choice = 3;
+        }
+      } while (choice < 3);
 
     }
-    private static void RunEF()
+
+    private static void StoreRun()
     {
-      var stores = _context.Stores;
-      stores.Add(new ChicagoStore { Name = "12th Street" });
-      _context.SaveChanges();
-    }
+      Console.WriteLine("Select Store You Want To View Orders of: ");
+      PrintStoreList();
+      int storeid = int.Parse(Console.ReadLine());
+      var orders = contextSingleton.context.Orders
+      .Where(s => s.StoreEntityID == (storeid))
+      .Include(o => o.Store).Include(o => o.Customer).Include(o => o.Pizzas).ThenInclude(p => p.Toppings).ToList();
+      foreach (var order in orders)
+      {
+        Console.WriteLine(order.ToString());
+      }
 
-    private static void Run()
+    }
+    private static void CustomerRun()
     {
       var order = new Order();
       Console.WriteLine("Welcome To PizzaBox");
-      // order.Store = SelectStore();
+      Console.WriteLine("Please Enter Your Name: ");
+      var tempname = Console.ReadLine();
+      var tempname2 = contextSingleton.context.Customers.FirstOrDefault(c => c.Name == tempname);
+      if (tempname2 != null)
+      {
+        order.Customer = tempname2;
+      }
+      else
+      {
+        order.Customer = new Customer { Name = tempname };
+      }
+
+      order.Store = SelectStore();
       order.Pizzas = SelectPizza();
+      var total = order.Total();
+      Console.WriteLine($"Your total is: ${total} + Tax = {(total * (decimal)1.0825).ToString("#.##")}");
+      contextSingleton.context.Orders.Add(order);
+      contextSingleton.context.SaveChanges();
+      Console.WriteLine("Order will ready in 15 mins Thank You !");
     }
 
     private static void PrintPizzaList()
@@ -51,17 +98,34 @@ namespace PizzaBox.Client
       List<APizza> pizzas = new List<APizza>();
       do
       {
-        PrintPizzaList();
         Console.WriteLine("Select Your Pizza");
+        PrintPizzaList();
         int input = int.Parse(Console.ReadLine());
-        var pizza = pizzaSingleton.Pizzas[input - 1];
-        pizza.Size = SelectSize();
-        pizza.Crust = SelectCrust();
-        if (pizza.Name == "Custom Pizza")
+        if (pizzaSingleton.Pizzas[input - 1] is MeatPizza)
         {
-          pizza.Toppings = SelectTopping();
+          var pizza = new MeatPizza();
+          pizza.Size = SelectSize();
+          pizza.Crust = SelectCrust();
+          pizzas.Add(pizza);
         }
-        pizzas.Add(pizza);
+
+        else if (pizzaSingleton.Pizzas[input - 1] is VeggiePizza)
+        {
+          var pizza = new VeggiePizza();
+          pizza.Size = SelectSize();
+          pizza.Crust = SelectCrust();
+          pizzas.Add(pizza);
+        }
+
+        else if (pizzaSingleton.Pizzas[input - 1] is CustomPizza)
+        {
+          var pizza = new CustomPizza();
+          pizza.Size = SelectSize();
+          pizza.Crust = SelectCrust();
+          pizza.Toppings = SelectTopping();
+          pizzas.Add(pizza);
+        }
+
         Console.WriteLine("Pizza in Cart");
         foreach (var item in pizzas)
         {
@@ -112,12 +176,11 @@ namespace PizzaBox.Client
     }
     private static AStore SelectStore()
     {
-      PrintStoreList();
       Console.WriteLine("Select Your Store");
+      PrintStoreList();
       var input = int.Parse(Console.ReadLine());
       return storeSingleton.Stores[input - 1];
     }
-
     private static void PrintCrustList()
     {
       int i = 0;

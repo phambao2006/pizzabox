@@ -11,7 +11,7 @@ namespace PizzaBox.Client.Singletons
   {
     private static ToppingSingleton _instance;
 
-    private readonly PizzaBoxContext _context = new PizzaBoxContext();
+    private static readonly ContextSingleton contextSingleton = ContextSingleton.Instance;
 
     public List<Topping> Toppings { get; }
     public static ToppingSingleton Instance
@@ -29,9 +29,18 @@ namespace PizzaBox.Client.Singletons
     }
     private ToppingSingleton()
     {
+      Toppings = new List<Topping>();
+      Toppings.AddRange(new List<Topping>
+      {
+            new Topping {Name = "Chicken", Price = 2},
+            new Topping {Name = "Beef", Price = 2},
+            new Topping {Name = "Pork", Price = 2},
+            new Topping {Name = "Mushroom" ,Price = 2},
+            new Topping {Name = "Pinapple", Price = 2},
+            new Topping {Name = "Bell Pepper", Price = 2}
 
-      Toppings = _context.Toppings.ToList();
 
+      });
     }
 
   }
